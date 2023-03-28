@@ -33,7 +33,7 @@ class Monsters_Ghost extends Monsters {
 
 class Monsters_Sans extends Monsters {
 	public Monsters_Sans() {
-		super.setName("샌즈");
+		super.setName("스켈레톤");
 		super.setAttackPower(250);
 	}
 }

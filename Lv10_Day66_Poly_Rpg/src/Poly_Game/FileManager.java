@@ -5,7 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-public class Data {
+public class FileManager {
 		BufferedReader br = null;
 		BufferedWriter bw = null;
 		FileWriter fw = null;

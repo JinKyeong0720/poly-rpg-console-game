@@ -2,6 +2,8 @@ package Poly_Game;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 // 유저관리
@@ -10,20 +12,19 @@ import java.util.Scanner;
 // 로그인
 // 로그아웃
 
-class User extends Main {
+class User extends _Main {
 	private String id;
 	private String password;
 	private String nickName;
 	private BufferedWriter bw = null;
-	private int log;
-	private int count;
+	private int log = -1;
+	private int count = 0;
+	Map<String, User> members = new HashMap<>();
 
 	User(String id, String password, String name) {
 		this.id = id;
 		this.password = password;
 		this.nickName = name;
-		this.log = -1;
-		this.count = 0;
 	}
 
 	public String getId() {
@@ -62,25 +63,25 @@ class User extends Main {
 	public int inputNumber() {
 		StringBuffer buffer = new StringBuffer();
 		try {
-
 			bw = new BufferedWriter(new OutputStreamWriter(System.out));
-			buffer.append();
+			buffer.append(id);
 			bw.write(buffer.toString());
 			bw.flush();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return count;
 	}
 
-	public boolean checkDupl(String id, String nickName) {
-		boolean dupl = false;
-		for (int i = 0; i < count; i++) {
-
-			if (id.equals(user.id) && (nickName.equals(user.nickName)))
-				return false;
-		}
-		return true;
-	}
+//	public boolean checkDupl(String id, String nickName) {
+//		boolean dupl = false;
+//		for (int i = 0; i < count; i++) {
+//			User user = new User(id, password, nickName);
+//			if (id.equals(user.id) && (nickName.equals(user.nickName)))
+//				return false;
+//		}
+//		return true;
+//	}
 
 	User createUser() {
 		Scanner scan = new Scanner(System.in);
@@ -90,43 +91,60 @@ class User extends Main {
 		System.out.print("가입할 Pw : ");
 		String password = scan.next();
 		System.out.print("가입할 Nickname : ");
-		String nickName= scan.next();
-		scan.close();
-
+		String nickName = scan.next();
 		return user;
 	}
 
 	public void join() {
 		createUser();
-//		Users user = 
-		if (!checkDupl(user.id && user.nickName)) {
-			addUser(user);
+		if (!(members.containsKey(id) && members.containsKey(nickName))) {
+			User user = new User(id, password, nickName);
+			members.put(id, user);
+			members.put(nickName, user);
+			System.out.println("회원가입 성공");
+		} else {
+			System.out.println("중복되는 아이디/닉네임");
 		}
 	}
 
 	public void leave() {
 		if (isLoggedin()) {
+			Scanner scan = new Scanner(System.in);
 			System.out.print("탈퇴할 Id : ");
-			String id;
+			String id = scan.next();
 			System.out.print("탈퇴할 Pw : ");
-			String password;
-			
+			String password = scan.next();
+
+			if ((members.containsKey(id)) && (members.containsKey(nickName))) {
+				if (members.get(id).getPassword().equals(password)) {
+					members.remove(id);
+					System.out.println("회원탈퇴 성공");
+					log = -1;
+				}
+			} else {
+				System.out.println("회원 정보를 다시 확인하세요");
+			}
 		}
+		logOut();
 	}
 
 	public void logIn() {
+		Scanner scan = new Scanner(System.in);
 		if (!isLoggedin()) {
 			System.out.print("Id : ");
-			String id;
+			String inputId = scan.next();
 			System.out.print("Pw : ");
-			String password;
+			String inputPassword = scan.next();
 
 			for (int i = 0; i < this.count; i++) {
-				
+				User user = new User(id, password, nickName);
+				if(inputId.equals(user.id) && (inputPassword.equals(user.password))) {
+					log = i;
+					isLoggedin();
+				} else {
+					System.out.println("회원정보를 다시 확인해주세요.");
+				}
 			}
-
-			if (!isLoggedin())
-				System.out.println("회원정보를 다시 확인해주세요.");
 		} else {
 			System.out.println("이미 로그인 상태입니다.");
 		}
@@ -135,19 +153,15 @@ class User extends Main {
 	public boolean isLoggedin() {
 		return this.log != -1;
 	}
-	
+
 	public void logOut() {
 		this.log = -1;
 		System.out.println("로그아웃 되었습니다.");
-	}
-	
-	public void changePassword() {
 	}
 
 	public void run() {
 		while (true) {
 			printMenu();
-			inputNumber();
 			int sel = inputNumber();
 			if (sel == 1)
 				join();

@@ -21,7 +21,7 @@ package Poly_Game;
  * 8. BufferedReader & BufferedWriter 사용
  */
 
-public class Main {
+public class _Main {
 	public static void main(String[] args) {
 		GameManager gameManager = new GameManager();
 		boolean run = true;
